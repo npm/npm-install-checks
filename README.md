@@ -1,1 +1,1 @@
-# npm-check-install
+# npm-install-checks
