@@ -12,7 +12,6 @@ function checkEngine (target, npmv, force, nodeVersion, strict, cb) {
   if (nodev && eng.node && !semver.satisfies(nodev, eng.node)
       || eng.npm && !semver.satisfies(npmv, eng.npm)) {
 
-    // dead code, as new semver throws.
     if (strict) {
       var er = new Error("Unsupported")
       er.code = "ENOTSUP"
