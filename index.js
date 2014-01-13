@@ -4,13 +4,13 @@ var log = require("npmlog")
 var semver = require("semver")
 
 exports.checkEngine = checkEngine
-function checkEngine (target, npmv, force, nodeVersion, strict, cb) {
-  var nodev = force ? null : nodeVersion
+function checkEngine (target, npmVer, nodeVer, force, strict, cb) {
+  var nodev = force ? null : nodeVer
     , strict = strict || target.engineStrict
     , eng = target.engines
   if (!eng) return cb()
   if (nodev && eng.node && !semver.satisfies(nodev, eng.node)
-      || eng.npm && !semver.satisfies(npmv, eng.npm)) {
+      || eng.npm && !semver.satisfies(npmVer, eng.npm)) {
 
     if (strict) {
       var er = new Error("Unsupported")
@@ -20,7 +20,7 @@ function checkEngine (target, npmv, force, nodeVersion, strict, cb) {
       return cb(er)
     } else {
       log.warn( "engine", "%s: wanted: %j (current: %j)"
-              , target._id, eng, {node: nodev, npm: npmv} )
+              , target._id, eng, {node: nodev, npm: npmVer} )
     }
   }
   return cb()

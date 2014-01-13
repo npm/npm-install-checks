@@ -4,7 +4,7 @@ A package that contains checks that npm runs during the installation.
 
 ## API
 
-### .checkEngine(target, npmv, force, nodeVersion, strict, cb)
+### .checkEngine(target, npmVer, nodeVer, force, strict, cb)
 Check if node/npm version is supported by the package.
 
 Error type: `ENOTSUP`
