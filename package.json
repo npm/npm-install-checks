@@ -17,9 +17,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/robertkowalski/npm-install-checks.git"
+    "url": "git://github.com/npm/npm-install-checks.git"
   },
-  "homepage": "https://github.com/robertkowalski/npm-install-checks",
+  "homepage": "https://github.com/npm/npm-install-checks",
   "keywords": [
     "npm,",
     "install"
@@ -27,6 +27,6 @@
   "author": "Robert Kowalski <rok@kowalski.gd>",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/robertkowalski/npm-install-checks/issues"
+    "url": "https://github.com/npm/npm-install-checks/issues"
   }
 }
