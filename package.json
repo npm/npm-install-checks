@@ -4,7 +4,7 @@
   "description": "checks that npm runs during the installation of a module",
   "main": "index.js",
   "dependencies": {
-    "npmlog": "0.0.6",
+    "npmlog": "0.1",
     "semver": "^2.3.0"
   },
   "devDependencies": {
