@@ -1,6 +1,6 @@
 {
   "name": "npm-install-checks",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "checks that npm runs during the installation of a module",
   "main": "index.js",
   "dependencies": {
