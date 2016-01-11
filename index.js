@@ -1,6 +1,6 @@
 var fs = require('fs')
 var path = require('path')
-var log = require('npmlog')
+var util = require('util')
 var semver = require('semver')
 
 exports.checkEngine = checkEngine
@@ -10,15 +10,15 @@ function checkEngine (target, npmVer, nodeVer, force, strict, cb) {
   if (!eng) return cb()
   if (nodev && eng.node && !semver.satisfies(nodev, eng.node) ||
       eng.npm && !semver.satisfies(npmVer, eng.npm)) {
+    var er = new Error(util.format('Unsupported engine for %s: wanted: %j (current: %j)',
+      target._id, eng, {node: nodev, npm: npmVer}))
+    er.code = 'ENOTSUP'
+    er.required = eng
+    er.pkgid = target._id
     if (strict) {
-      var er = new Error('Unsupported')
-      er.code = 'ENOTSUP'
-      er.required = eng
-      er.pkgid = target._id
       return cb(er)
     } else {
-      log.warn('engine', '%s: wanted: %j (current: %j)',
-               target._id, eng, {node: nodev, npm: npmVer})
+      return cb(null, er)
     }
   }
   return cb()
@@ -42,7 +42,8 @@ function checkPlatform (target, force, cb) {
     cpuOk = checkList(arch, target.cpu)
   }
   if (!osOk || !cpuOk) {
-    var er = new Error('Unsupported')
+    var er = new Error(util.format('Unsupported platform for %s: wanted %j (current: %j)',
+      target._id, target, {os: platform, cpu: arch}))
     er.code = 'EBADPLATFORM'
     er.os = target.os || ['any']
     er.cpu = target.cpu || ['any']
@@ -108,7 +109,7 @@ function checkCycle (target, ancestors, cb) {
   }
   if (p[name] !== version) return cb()
 
-  var er = new Error('Unresolvable cycle detected')
+  var er = new Error(target._id + ': Unresolvable cycle detected')
   var tree = [target._id, JSON.parse(JSON.stringify(ancestors))]
   var t = Object.getPrototypeOf(ancestors)
   while (t && t !== Object.prototype) {
@@ -116,7 +117,6 @@ function checkCycle (target, ancestors, cb) {
     tree.push(JSON.parse(JSON.stringify(t)))
     t = Object.getPrototypeOf(t)
   }
-  log.verbose('unresolvable dependency tree', tree)
   er.pkgid = target._id
   er.code = 'ECYCLE'
   return cb(er)
@@ -134,7 +134,7 @@ function checkGit (folder, cb) {
 function checkGit_ (folder, cb) {
   fs.stat(path.resolve(folder, '.git'), function (er, s) {
     if (!er && s.isDirectory()) {
-      var e = new Error('Appears to be a git repo or submodule.')
+      var e = new Error(folder + ': Appears to be a git repo or submodule.')
       e.path = folder
       e.code = 'EISGIT'
       return cb(e)

@@ -28,8 +28,10 @@ test('npm version too old', function (t) {
 
 test('strict=false w/engineStrict json does not return an error', function (t) {
   var target = { engines: { npm: '1.3.6' }, engineStrict: true }
-  c(target, '1.4.2', '0.2.1', false, false, function (err) {
+  c(target, '1.4.2', '0.2.1', false, false, function (err, warn) {
     t.notOk(err, 'returns no error')
+    t.ok(warn, 'returns warning object')
+    t.equals(warn.required.npm, '1.3.6')
     t.end()
   })
 })
