@@ -35,3 +35,28 @@ test('strict=false w/engineStrict json does not return an error', function (t) {
     t.end()
   })
 })
+
+test('force node version too old', function (t) {
+  var target = { _id: 'test@1.0.0', engines: { node: '0.1.0' } }
+  c(target, '1.3.2', '0.2.1', true, true, function (err, warn) {
+    t.is(err, undefined, 'returns no error')
+    t.notOk(warn, 'returns no warning')
+    t.end()
+  })
+})
+
+test('force npm version too old', function (t) {
+  var target = { _id: 'test@1.0.0', engines: { npm: '^1.4.6' } }
+  c(target, '1.3.2', '0.2.1', true, true, function (err, warn) {
+    t.ok(err, "can't force an npm version mismatch")
+    t.end()
+  })
+})
+
+test('no engine', function (t) {
+  c({}, '1.3.2', '0.2.1', false, true, function (err, warn) {
+    t.notOk(err, 'returns no error')
+    t.notOk(warn, 'returns no warning')
+    t.end()
+  })
+})

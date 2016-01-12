@@ -22,6 +22,13 @@ test('is not a .git repo', function (t) {
   })
 })
 
+test('non-thing', function (t) {
+  c('/path/to/no/where', function (err) {
+    t.notOk(err, 'non-existent path is not a .git repo')
+    t.end()
+  })
+})
+
 test('cleanup', function (t) {
   rimraf(gitFixturePath, function () {
     t.pass('cleanup')
