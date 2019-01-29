@@ -7,10 +7,10 @@
     "semver": "^2.3.0 || 3.x || 4 || 5"
   },
   "devDependencies": {
-    "mkdirp": "~0.3.5",
-    "rimraf": "~2.2.5",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.3",
     "standard": "^5.4.1",
-    "tap": "^5.0.1"
+    "tap": "^12.4.0"
   },
   "scripts": {
     "test": "standard && tap --coverage test/*.js"
