@@ -60,3 +60,12 @@ test('no engine', function (t) {
     t.end()
   })
 })
+
+test('npm prerelease', function (t) {
+  var target = { engines: { node: '>=0.8', npm: '>=1.2.3' } }
+  c(target, '69.420.0-yolo', '69.420.0-yolo', true, true, function (err, warn) {
+    t.notOk(err, 'returns no error')
+    t.notOk(warn, 'returns no warning')
+    t.end()
+  })
+})
