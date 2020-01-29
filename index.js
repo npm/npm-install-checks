@@ -9,10 +9,11 @@ function checkEngine (target, npmVer, nodeVer, force, strict, cb) {
   var eng = target.engines
   var opt = { includePrerelease: true }
   if (!eng) return cb()
-  if (nodev && eng.node && !semver.satisfies(nodev, eng.node, opt) ||
-      eng.npm && !semver.satisfies(npmVer, eng.npm, opt)) {
+  const nodeFail = nodev && eng.node && !semver.satisfies(nodev, eng.node, opt)
+  const npmFail = eng.npm && !semver.satisfies(npmVer, eng.npm, opt)
+  if (nodeFail || npmFail) {
     var er = new Error(util.format('Unsupported engine for %s: wanted: %j (current: %j)',
-      target._id, eng, {node: nodev, npm: npmVer}))
+      target._id, eng, { node: nodev, npm: npmVer }))
     er.code = 'ENOTSUP'
     er.required = eng
     er.pkgid = target._id
@@ -44,7 +45,7 @@ function checkPlatform (target, force, cb) {
   }
   if (!osOk || !cpuOk) {
     var er = new Error(util.format('Unsupported platform for %s: wanted %j (current: %j)',
-      target._id, target, {os: platform, cpu: arch}))
+      target._id, target, { os: platform, cpu: arch }))
     er.code = 'EBADPLATFORM'
     er.os = target.os || ['any']
     er.cpu = target.cpu || ['any']
@@ -80,6 +81,7 @@ function checkList (value, list) {
 }
 
 exports.checkCycle = checkCycle
+/* istanbul ignore next */
 function checkCycle (target, ancestors, cb) {
   // there are some very rare and pathological edge-cases where
   // a cycle can cause npm to try to install a never-ending tree
