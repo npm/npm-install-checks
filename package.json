@@ -1,36 +1,30 @@
 {
   "name": "npm-install-checks",
   "version": "3.0.0",
-  "description": "checks that npm runs during the installation of a module",
+  "description": "Check the engines and platform fields in package.json",
   "main": "index.js",
   "dependencies": {
     "semver": "^7.1.1"
   },
   "devDependencies": {
-    "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.3",
-    "standard": "^14.3.1",
     "tap": "^14.10.6"
   },
   "scripts": {
-    "test": "tap",
-    "posttest": "standard"
+    "test": "tap"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/npm/npm-install-checks.git"
   },
-  "homepage": "https://github.com/npm/npm-install-checks",
   "keywords": [
     "npm,",
     "install"
   ],
-  "author": "Robert Kowalski <rok@kowalski.gd>",
   "license": "BSD-2-Clause",
-  "bugs": {
-    "url": "https://github.com/npm/npm-install-checks/issues"
-  },
   "files": [
     "index.js"
-  ]
+  ],
+  "engines": {
+    "node": ">=10"
+  }
 }
