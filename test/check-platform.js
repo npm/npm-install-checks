@@ -1,104 +1,44 @@
-var test = require('tap').test
-var c = require('../index.js').checkPlatform
+const t = require('tap')
+const {checkPlatform} = require('../index.js')
 
-test('target cpu wrong', function (t) {
-  var target = {}
-  target.cpu = 'enten-cpu'
-  target.os = 'any'
-  c(target, false, function (err) {
-    t.ok(err, 'error present')
-    t.equal(err.code, 'EBADPLATFORM')
-    t.end()
-  })
-})
+t.test('target cpu wrong', async t =>
+  t.throws(() => checkPlatform({
+    cpu: 'enten-cpu',
+    os: 'any'
+  }), { code: 'EBADPLATFORM' }))
 
-test('os wrong', function (t) {
-  var target = {}
-  target.cpu = 'any'
-  target.os = 'enten-os'
-  c(target, false, function (err) {
-    t.ok(err, 'error present')
-    t.equal(err.code, 'EBADPLATFORM')
-    t.end()
-  })
-})
+t.test('os wrong', async t =>
+  t.throws(() => checkPlatform({
+    cpu: 'any',
+    os: 'enten-os'
+  }), { code: 'EBADPLATFORM' }))
 
-test('nothing wrong', function (t) {
-  var target = {}
-  target.cpu = 'any'
-  target.os = 'any'
-  c(target, false, function (err) {
-    t.notOk(err, 'no error present')
-    t.end()
-  })
-})
+t.test('nothing wrong', async t =>
+  checkPlatform({cpu: 'any', os: 'any'}))
 
-test('force', function (t) {
-  var target = {}
-  target.cpu = 'enten-cpu'
-  target.os = 'any'
-  c(target, true, function (err) {
-    t.notOk(err, 'no error present')
-    t.end()
-  })
-})
+t.test('force', async t =>
+  checkPlatform({ cpu: 'enten-cpu', os: 'any' }, true))
 
-test('no opinions', function (t) {
-  var target = {}
-  c(target, false, function (err) {
-    t.notOk(err, 'no error present')
-    t.end()
-  })
-})
+t.test('no opinions', async t =>
+  checkPlatform({}))
 
-test('only target cpu wrong', function (t) {
-  var target = {}
-  target.cpu = 'enten-cpu'
-  c(target, false, function (err) {
-    t.ok(err, 'error present')
-    t.equal(err.code, 'EBADPLATFORM')
-    t.end()
-  })
-})
+t.test('only target cpu wrong', async t =>
+  t.throws(() => checkPlatform({ cpu: 'enten-cpu' }), { code: 'EBADPLATFORM' }))
 
-test('only os wrong', function (t) {
-  var target = {}
-  target.os = 'enten-os'
-  c(target, false, function (err) {
-    t.ok(err, 'error present')
-    t.equal(err.code, 'EBADPLATFORM')
-    t.end()
-  })
-})
+t.test('only os wrong', async t =>
+  t.throws(() => checkPlatform({ os: 'enten-os' }), { code: 'EBADPLATFORM' }))
 
-test('everything wrong w/arrays', function (t) {
-  var target = {}
-  target.cpu = ['enten-cpu']
-  target.os = ['enten-os']
-  c(target, false, function (err) {
-    t.ok(err, 'error present')
-    t.equal(err.code, 'EBADPLATFORM')
-    t.end()
-  })
-})
+t.test('everything wrong w/arrays', async t =>
+  t.throws(() => checkPlatform({
+    cpu: ['enten-cpu'],
+    os: ['enten-os']
+  }), { code: 'EBADPLATFORM' }))
 
-test('os wrong (negation)', function (t) {
-  var target = {}
-  target.cpu = 'any'
-  target.os = '!' + process.platform
-  c(target, false, function (err) {
-    t.ok(err, 'error present')
-    t.equal(err.code, 'EBADPLATFORM')
-    t.end()
-  })
-})
+t.test('os wrong (negation)', async t =>
+  t.throws(() => checkPlatform({
+    cpu: 'any',
+    os: '!' + process.platform
+  }), { code: 'EBADPLATFORM' }))
 
-test('nothing wrong (negation)', function (t) {
-  var target = {}
-  target.cpu = '!enten-cpu'
-  target.os = '!enten-os'
-  c(target, false, function (err) {
-    t.notOk(err, 'no error present')
-    t.end()
-  })
-})
+t.test('nothing wrong (negation)', async t =>
+  checkPlatform({ cpu: '!enten-cpu', os: '!enten-os' }))

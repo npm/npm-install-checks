@@ -1,71 +1,43 @@
-var test = require('tap').test
-var c = require('../index.js').checkEngine
+const t = require('tap')
+const {checkEngine} = require('../index.js')
 
-test('no engine defined', function (t) {
-  c({ engines: {} }, '1.1.2', '0.2.1', false, true, function (err) {
-    t.notOk(err, 'no error present')
-    t.end()
-  })
-})
+const e = (npm, node, _id = 'pkg@1.2.3') => {
+  const engines = {}
+  if (npm)
+    engines.npm = npm
+  if (node)
+    engines.node = node
+  return {engines, _id}
+}
 
-test('node version too old', function (t) {
-  var target = { engines: { node: '0.10.24' } }
-  c(target, '1.1.2', '0.10.18', false, true, function (err) {
-    t.ok(err, 'returns an error')
-    t.equals(err.required.node, '0.10.24')
-    t.end()
-  })
-})
+t.test('no engine', async t =>
+  checkEngine({}, '1.3.2', '0.2.1'))
 
-test('npm version too old', function (t) {
-  var target = { engines: { npm: '^1.4.6' } }
-  c(target, '1.3.2', '0.2.1', false, true, function (err) {
-    t.ok(err, 'returns an error')
-    t.equals(err.required.npm, '^1.4.6')
-    t.end()
-  })
-})
+t.test('empty engine object', async t =>
+  checkEngine(e(), '1.1.2', '0.2.1'))
 
-test('strict=false w/engineStrict json does not return an error', function (t) {
-  var target = { engines: { npm: '1.3.6' }, engineStrict: true }
-  c(target, '1.4.2', '0.2.1', false, false, function (err, warn) {
-    t.notOk(err, 'returns no error')
-    t.ok(warn, 'returns warning object')
-    t.equals(warn.required.npm, '1.3.6')
-    t.end()
-  })
-})
+t.test('node version too old', async t =>
+  t.throws(() => checkEngine(e(null, '0.10.24'), '1.1.2', '0.10.18'), {
+    required: { node: '0.10.24' },
+    code: 'EBADENGINE'
+  }))
 
-test('force node version too old', function (t) {
-  var target = { _id: 'test@1.0.0', engines: { node: '0.1.0' } }
-  c(target, '1.3.2', '0.2.1', true, true, function (err, warn) {
-    t.is(err, undefined, 'returns no error')
-    t.notOk(warn, 'returns no warning')
-    t.end()
-  })
-})
+t.test('npm version too old', async t =>
+  t.throws(() => checkEngine(e('^1.4.6'), '1.3.2', '0.2.1'), {
+    required: { npm: '^1.4.6' },
+    code: 'EBADENGINE'
+  }))
 
-test('force npm version too old', function (t) {
-  var target = { _id: 'test@1.0.0', engines: { npm: '^1.4.6' } }
-  c(target, '1.3.2', '0.2.1', true, true, function (err, warn) {
-    t.ok(err, "can't force an npm version mismatch")
-    t.end()
-  })
-})
+t.test('force node version too old', async t =>
+  checkEngine(e(null, '0.1.0', 'test@1.0.0'), '1.3.2', '0.2.1', true))
 
-test('no engine', function (t) {
-  c({}, '1.3.2', '0.2.1', false, true, function (err, warn) {
-    t.notOk(err, 'returns no error')
-    t.notOk(warn, 'returns no warning')
-    t.end()
-  })
-})
+t.test('cannot force when npm version too old', async t =>
+  t.throws(() => checkEngine(e('^1.4.6', null, 'test@1.0.0'), '1.3.2', '0.2.1'), {
+    code: 'EBADENGINE'
+  }))
 
-test('npm prerelease', function (t) {
-  var target = { engines: { node: '>=0.8', npm: '>=1.2.3' } }
-  c(target, '69.420.0-yolo', '69.420.0-yolo', true, true, function (err, warn) {
-    t.notOk(err, 'returns no error')
-    t.notOk(warn, 'returns no warning')
-    t.end()
-  })
-})
+t.test('npm prerelease', async t =>
+  checkEngine(e('>=1.2.3','>=0.8'), '69.420.0-yolo', '69.420.0-yolo'))
+
+t.test('node prerelease', async t =>
+  checkEngine(e('>=1.2.3','>=0.8'), '1.2.3', '69.420.0-yolo'))
