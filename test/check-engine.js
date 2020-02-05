@@ -41,3 +41,9 @@ t.test('npm prerelease', async t =>
 
 t.test('node prerelease', async t =>
   checkEngine(e('>=1.2.3','>=0.8'), '1.2.3', '69.420.0-yolo'))
+
+t.test('no node version', async t =>
+  checkEngine(e('>=1.2.3','>=0.8'), '1.2.3', null))
+
+t.test('no npm version', async t =>
+  checkEngine(e('>=1.2.3','>=0.8'), null, '1.2.3'))

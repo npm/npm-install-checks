@@ -10,7 +10,7 @@ const checkEngine = (target, npmVer, nodeVer, force = false) => {
   }
 
   const nodeFail = nodev && eng.node && !semver.satisfies(nodev, eng.node, opt)
-  const npmFail = eng.npm && !semver.satisfies(npmVer, eng.npm, opt)
+  const npmFail = npmVer && eng.npm && !semver.satisfies(npmVer, eng.npm, opt)
   if (nodeFail || npmFail) {
     throw Object.assign(new Error('Unsupported engine'), {
       pkgid: target._id,
