@@ -7,7 +7,7 @@
     "semver": "^7.1.1"
   },
   "devDependencies": {
-    "tap": "^14.10.6"
+    "tap": "^16.0.1"
   },
   "scripts": {
     "test": "tap",
