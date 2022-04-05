@@ -1,20 +1,20 @@
 const t = require('tap')
-const {checkPlatform} = require('../index.js')
+const { checkPlatform } = require('..')
 
 t.test('target cpu wrong', async t =>
   t.throws(() => checkPlatform({
     cpu: 'enten-cpu',
-    os: 'any'
+    os: 'any',
   }), { code: 'EBADPLATFORM' }))
 
 t.test('os wrong', async t =>
   t.throws(() => checkPlatform({
     cpu: 'any',
-    os: 'enten-os'
+    os: 'enten-os',
   }), { code: 'EBADPLATFORM' }))
 
 t.test('nothing wrong', async t =>
-  checkPlatform({cpu: 'any', os: 'any'}))
+  checkPlatform({ cpu: 'any', os: 'any' }))
 
 t.test('force', async t =>
   checkPlatform({ cpu: 'enten-cpu', os: 'any' }, true))
@@ -31,13 +31,13 @@ t.test('only os wrong', async t =>
 t.test('everything wrong w/arrays', async t =>
   t.throws(() => checkPlatform({
     cpu: ['enten-cpu'],
-    os: ['enten-os']
+    os: ['enten-os'],
   }), { code: 'EBADPLATFORM' }))
 
 t.test('os wrong (negation)', async t =>
   t.throws(() => checkPlatform({
     cpu: 'any',
-    os: '!' + process.platform
+    os: '!' + process.platform,
   }), { code: 'EBADPLATFORM' }))
 
 t.test('nothing wrong (negation)', async t =>
