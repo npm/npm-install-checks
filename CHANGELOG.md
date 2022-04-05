@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/npm/npm-install-checks/compare/v4.0.0...v5.0.0) (2022-04-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* this drops support for node 10 and non-LTS versions of node 12 and node 14
+
+### Dependencies
+
+* @npmcli/template-oss@3.2.2 ([45e7fd5](https://github.com/npm/npm-install-checks/commit/45e7fd5dee0c5137825c75acbc62eacc7d0c0d08))
+
 ## v4.0
 
 * Remove `checkCycle` and `checkGit`, as they are no longer used in npm v7
