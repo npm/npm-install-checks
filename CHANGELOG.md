@@ -1,5 +1,15 @@
 # Changelog
 
+## [6.0.0](https://github.com/npm/npm-install-checks/compare/v5.0.0...v6.0.0) (2022-10-10)
+
+### ⚠️ BREAKING CHANGES
+
+* `npm-install-checks` is now compatible with the following semver range for node: `^14.17.0 || ^16.13.0 || >=18.0.0`
+
+### Features
+
+* [`f7c1276`](https://github.com/npm/npm-install-checks/commit/f7c12765c0d2c4066af38819ada408ef71ed9bd4) [#38](https://github.com/npm/npm-install-checks/pull/38) postinstall for dependabot template-oss PR (@lukekarrys)
+
 ## [5.0.0](https://github.com/npm/npm-install-checks/compare/v4.0.0...v5.0.0) (2022-04-05)
 
 
