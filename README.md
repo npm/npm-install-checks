@@ -11,8 +11,7 @@ Errors have a `required` and `current` fields.
 
 ### .checkEngine(pkg, npmVer, nodeVer, force = false)
 
-Check if node/npm version is supported by the package. If it isn't
-supported, an error is thrown.
+Check if a package's `engines.node` and `engines.npm` match the running system.
 
 `force` argument will override the node version check, but not the npm
 version check, as this typically would indicate that the current version of
@@ -22,6 +21,8 @@ Error code: 'EBADENGINE'
 
 ### .checkPlatform(pkg, force)
 
-Check if OS/Arch is supported by the package.
+Check if a package's `os`, `cpu` and `libc` match the running system.
+
+`force` argument skips all checks.
 
 Error code: 'EBADPLATFORM'
