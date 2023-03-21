@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.1.0](https://github.com/npm/npm-install-checks/compare/v6.0.0...v6.1.0) (2023-03-21)
+
+### Features
+
+* [`1b6f3e4`](https://github.com/npm/npm-install-checks/commit/1b6f3e48e2fa7dda70850a16726cd58be826baf7) [#54](https://github.com/npm/npm-install-checks/pull/54) support libc field checks (#54) (@nlf)
+
 ## [6.0.0](https://github.com/npm/npm-install-checks/compare/v5.0.0...v6.0.0) (2022-10-10)
 
 ### ⚠️ BREAKING CHANGES
