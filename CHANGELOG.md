@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.1.1](https://github.com/npm/npm-install-checks/compare/v6.1.0...v6.1.1) (2023-04-12)
+
+### Bug Fixes
+
+* [`7a93622`](https://github.com/npm/npm-install-checks/commit/7a936221e4bd9db38b5be2746b514cceff3574f6) [#57](https://github.com/npm/npm-install-checks/pull/57) typo glibcRuntimeVersion glibcVersionRuntime (#57) (@snyamathi)
+
 ## [6.1.0](https://github.com/npm/npm-install-checks/compare/v6.0.0...v6.1.0) (2023-03-21)
 
 ### Features
