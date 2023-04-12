@@ -81,9 +81,9 @@ t.test('libc', (t) => {
 
     REPORT = { header: {} }
     t.throws(() => checkPlatform({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
-      'fails when header is missing glibcRuntimeVersion property')
+      'fails when header is missing glibcVersionRuntime property')
 
-    REPORT = { header: { glibcRuntimeVersion: '1' } }
+    REPORT = { header: { glibcVersionRuntime: '1' } }
     t.doesNotThrow(() => checkPlatform({ libc: 'glibc' }), 'allows glibc on glibc')
     t.throws(() => checkPlatform({ libc: 'musl' }), { code: 'EBADPLATFORM' },
       'does not allow musl on glibc')
