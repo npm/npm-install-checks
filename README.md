@@ -27,6 +27,4 @@ Check if a package's `os`, `cpu` and `libc` match the running system.
 
 `environment` overrides the execution environment which comes from `process.platform` and `process.arch` by default. `environment.os` and `environment.cpu` are available.
 
-```js
-
 Error code: 'EBADPLATFORM'
