@@ -43,6 +43,38 @@ t.test('os wrong (negation)', async t =>
 t.test('nothing wrong (negation)', async t =>
   checkPlatform({ cpu: '!enten-cpu', os: '!enten-os' }))
 
+t.test('nothing wrong with overridden os', async t =>
+  checkPlatform({
+    cpu: 'any',
+    os: 'enten-os',
+  }, false, {
+    os: 'enten-os',
+  }))
+
+t.test('nothing wrong with overridden cpu', async t =>
+  checkPlatform({
+    cpu: 'enten-cpu',
+    os: 'any',
+  }, false, {
+    cpu: 'enten-cpu',
+  }), { code: 'EBADPLATFORM' })
+
+t.test('wrong os with overridden os', async t =>
+  t.throws(() => checkPlatform({
+    cpu: 'any',
+    os: 'enten-os',
+  }, false, {
+    os: 'another-os',
+  }), { code: 'EBADPLATFORM' }))
+
+t.test('wrong cpu with overridden cpu', async t =>
+  t.throws(() => checkPlatform({
+    cpu: 'enten-cpu',
+    os: 'any',
+  }, false, {
+    cpu: 'another-cpu',
+  }), { code: 'EBADPLATFORM' }))
+
 t.test('libc', (t) => {
   let PLATFORM = ''
 
