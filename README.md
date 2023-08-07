@@ -19,10 +19,12 @@ npm is unable to install the package properly for some reason.
 
 Error code: 'EBADENGINE'
 
-### .checkPlatform(pkg, force)
+### .checkPlatform(pkg, force, environment)
 
 Check if a package's `os`, `cpu` and `libc` match the running system.
 
 `force` argument skips all checks.
+
+`environment` overrides the execution environment which comes from `process.platform` and `process.arch` by default. `environment.os` and `environment.cpu` are available.
 
 Error code: 'EBADPLATFORM'
