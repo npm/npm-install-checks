@@ -57,7 +57,7 @@ t.test('nothing wrong with overridden cpu', async t =>
     os: 'any',
   }, false, {
     cpu: 'enten-cpu',
-  }), { code: 'EBADPLATFORM' })
+  }))
 
 t.test('wrong os with overridden os', async t =>
   t.throws(() => checkPlatform({
