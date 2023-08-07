@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.2.0](https://github.com/npm/npm-install-checks/compare/v6.1.1...v6.2.0) (2023-08-07)
+
+### Features
+
+* [`7a3f5ed`](https://github.com/npm/npm-install-checks/commit/7a3f5ed9ea21d99915e5d30f9d4eba01ac8af319) [#65](https://github.com/npm/npm-install-checks/pull/65) allow checkPlatform to override execution environment (#65) (@yukukotani)
+
 ## [6.1.1](https://github.com/npm/npm-install-checks/compare/v6.1.0...v6.1.1) (2023-04-12)
 
 ### Bug Fixes
