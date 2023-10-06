@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.3.0](https://github.com/npm/npm-install-checks/compare/v6.2.0...v6.3.0) (2023-10-06)
+
+### Features
+
+* [`0419751`](https://github.com/npm/npm-install-checks/commit/04197512179c508abb55fa528d293ee669c19b91) [#71](https://github.com/npm/npm-install-checks/pull/71) allow checkPlatform to override execution libc (#71) (@Brooooooklyn)
+
 ## [6.2.0](https://github.com/npm/npm-install-checks/compare/v6.1.1...v6.2.0) (2023-08-07)
 
 ### Features
