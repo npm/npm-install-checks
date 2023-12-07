@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.3.1](https://github.com/npm/npm-install-checks/compare/v6.3.0...v6.3.1) (2023-12-07)
+
+### Chores
+
+* [`b0e783b`](https://github.com/npm/npm-install-checks/commit/b0e783bf06fcc4335671659f1b05a2c9b13d4eb9) [#92](https://github.com/npm/npm-install-checks/pull/92) postinstall for dependabot template-oss PR (@lukekarrys)
+* [`639ac93`](https://github.com/npm/npm-install-checks/commit/639ac93b1d86d728d138fcb76763501c30c747a2) [#92](https://github.com/npm/npm-install-checks/pull/92) bump @npmcli/template-oss from 4.21.1 to 4.21.3 (@dependabot[bot])
+* [`6d766e4`](https://github.com/npm/npm-install-checks/commit/6d766e452e9781d27981151cb9f21ff7d22be4a7) [#90](https://github.com/npm/npm-install-checks/pull/90) postinstall for dependabot template-oss PR (@lukekarrys)
+* [`1456ee5`](https://github.com/npm/npm-install-checks/commit/1456ee5dd800a4cd6c5f20818c613aaeb870d4e3) [#90](https://github.com/npm/npm-install-checks/pull/90) bump @npmcli/template-oss from 4.19.0 to 4.21.1 (@dependabot[bot])
+
 ## [6.3.0](https://github.com/npm/npm-install-checks/compare/v6.2.0...v6.3.0) (2023-10-06)
 
 ### Features
