@@ -13,13 +13,13 @@ t.test('os wrong', async t =>
     os: 'enten-os',
   }), { code: 'EBADPLATFORM' }))
 
-t.test('nothing wrong', async t =>
+t.test('nothing wrong', async () =>
   checkPlatform({ cpu: 'any', os: 'any' }))
 
-t.test('force', async t =>
+t.test('force', async () =>
   checkPlatform({ cpu: 'enten-cpu', os: 'any' }, true))
 
-t.test('no opinions', async t =>
+t.test('no opinions', async () =>
   checkPlatform({}))
 
 t.test('only target cpu wrong', async t =>
@@ -40,10 +40,10 @@ t.test('os wrong (negation)', async t =>
     os: '!' + process.platform,
   }), { code: 'EBADPLATFORM' }))
 
-t.test('nothing wrong (negation)', async t =>
+t.test('nothing wrong (negation)', async () =>
   checkPlatform({ cpu: '!enten-cpu', os: '!enten-os' }))
 
-t.test('nothing wrong with overridden os', async t =>
+t.test('nothing wrong with overridden os', async () =>
   checkPlatform({
     cpu: 'any',
     os: 'enten-os',
@@ -51,7 +51,7 @@ t.test('nothing wrong with overridden os', async t =>
     os: 'enten-os',
   }))
 
-t.test('nothing wrong with overridden cpu', async t =>
+t.test('nothing wrong with overridden cpu', async () =>
   checkPlatform({
     cpu: 'enten-cpu',
     os: 'any',
@@ -59,7 +59,7 @@ t.test('nothing wrong with overridden cpu', async t =>
     cpu: 'enten-cpu',
   }))
 
-t.test('nothing wrong with overridden libc', async t =>
+t.test('nothing wrong with overridden libc', async () =>
   checkPlatform({
     cpu: 'enten-cpu',
     libc: 'enten-libc',

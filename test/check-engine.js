@@ -12,10 +12,10 @@ const e = (npm, node, _id = 'pkg@1.2.3') => {
   return { engines, _id }
 }
 
-t.test('no engine', async t =>
+t.test('no engine', async () =>
   checkEngine({}, '1.3.2', '0.2.1'))
 
-t.test('empty engine object', async t =>
+t.test('empty engine object', async () =>
   checkEngine(e(), '1.1.2', '0.2.1'))
 
 t.test('node version too old', async t =>
@@ -30,7 +30,7 @@ t.test('npm version too old', async t =>
     code: 'EBADENGINE',
   }))
 
-t.test('force node version too old', async t =>
+t.test('force node version too old', async () =>
   checkEngine(e(null, '0.1.0', 'test@1.0.0'), '1.3.2', '0.2.1', true))
 
 t.test('cannot force when npm version too old', async t =>
@@ -38,14 +38,14 @@ t.test('cannot force when npm version too old', async t =>
     code: 'EBADENGINE',
   }))
 
-t.test('npm prerelease', async t =>
+t.test('npm prerelease', async () =>
   checkEngine(e('>=1.2.3', '>=0.8'), '69.420.0-yolo', '69.420.0-yolo'))
 
-t.test('node prerelease', async t =>
+t.test('node prerelease', async () =>
   checkEngine(e('>=1.2.3', '>=0.8'), '1.2.3', '69.420.0-yolo'))
 
-t.test('no node version', async t =>
+t.test('no node version', async () =>
   checkEngine(e('>=1.2.3', '>=0.8'), '1.2.3', null))
 
-t.test('no npm version', async t =>
+t.test('no npm version', async () =>
   checkEngine(e('>=1.2.3', '>=0.8'), null, '1.2.3'))
