@@ -2,7 +2,16 @@
   "name": "npm-install-checks",
   "version": "6.3.0",
   "description": "Check the engines and platform fields in package.json",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": [
+      {
+        "default": "./lib/index.js"
+      },
+      "./lib/index.js"
+    ]
+  },
+  "type": "commonjs",
   "dependencies": {
     "semver": "^7.1.1"
   },
