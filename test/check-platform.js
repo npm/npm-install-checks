@@ -1,4 +1,5 @@
 const t = require('tap')
+const process = require('node:process')
 const { checkPlatform } = require('..')
 
 t.test('target cpu wrong', async t =>

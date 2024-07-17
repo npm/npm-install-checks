@@ -17,6 +17,11 @@ t.test('tests all the right fields', async t => {
         const wanted = { name: `test-${env}-wanted` }
         t.same(checkDev({ [env]: wanted }), { [env]: wanted })
       })
+      t.test('name only', async t => {
+        const wanted = { name: 'test-name' }
+        const current = { name: 'test-name' }
+        t.same(checkDev({ [env]: wanted }, { [env]: current}), null)
+      })
       t.test('non-semver version is not the same', async t => {
         const wanted = { name: `test-name`, version: 'test-version-wanted' }
         const current = { name: `test-name`, version: 'test-version-current' }
