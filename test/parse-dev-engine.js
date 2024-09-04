@@ -255,3 +255,134 @@ t.test('tests all the right fields', async t => {
     })
   }
 })
+
+t.test('spec 1', async t => {
+  const example = {
+    runtime: {
+      name: 'node',
+      version: '>= 20.0.0',
+      onFail: 'error',
+    },
+    packageManager: {
+      name: 'yarn',
+      version: '3.2.3',
+      onFail: 'download',
+    },
+  }
+
+  t.same(parseDevEngines(example, {
+    os: { name: 'darwin', version: '23.0.0' },
+    cpu: { name: 'arm' },
+    libc: { name: 'glibc' },
+    runtime: { name: 'node', version: '20.0.0' },
+    packageManager: { name: 'yarn', version: '3.2.3' },
+  }), [])
+})
+
+t.test('spec 2', async t => {
+  const example = {
+    os: {
+      name: 'darwin',
+      version: '>= 23.0.0',
+    },
+    cpu: [
+      {
+        name: 'arm',
+      },
+      {
+        name: 'x86',
+      },
+    ],
+    libc: {
+      name: 'glibc',
+    },
+    runtime: [
+      {
+        name: 'bun',
+        version: '>= 1.0.0',
+        onFail: 'ignore',
+      },
+      {
+        name: 'node',
+        version: '>= 20.0.0',
+        onFail: 'error',
+      },
+    ],
+    packageManager: [
+      {
+        name: 'bun',
+        version: '>= 1.0.0',
+        onFail: 'ignore',
+      },
+      {
+        name: 'yarn',
+        version: '3.2.3',
+        onFail: 'download',
+      },
+    ],
+  }
+
+  t.same(parseDevEngines(example, {
+    os: { name: 'darwin', version: '23.0.0' },
+    cpu: { name: 'arm' },
+    libc: { name: 'glibc' },
+    runtime: { name: 'node', version: '20.0.0' },
+    packageManager: { name: 'yarn', version: '3.2.3' },
+  }), [])
+
+  t.same(parseDevEngines(example, {
+    os: { name: 'darwin', version: '10.0.0' },
+    cpu: { name: 'arm' },
+    libc: { name: 'glibc' },
+    runtime: { name: 'node', version: '20.0.0' },
+    packageManager: { name: 'yarn', version: '3.2.3' },
+  }), [
+    Object.assign(new Error(`Invalid engine "os"`), {
+      errors: [
+        // eslint-disable-next-line max-len
+        new Error(`Invalid semver version ">= 23.0.0" does not match "10.0.0" for "os"`),
+      ],
+      engine: 'os',
+      isWarn: false,
+      isError: true,
+      current: { name: 'darwin', version: '10.0.0' },
+      required: {
+        name: 'darwin',
+        version: '>= 23.0.0',
+      },
+    }),
+  ])
+
+  t.same(parseDevEngines(example, {
+    os: { name: 'darwin', version: '23.0.0' },
+    cpu: { name: 'arm' },
+    libc: { name: 'glibc' },
+    runtime: { name: 'nondescript', version: '20.0.0' },
+    packageManager: { name: 'yarn', version: '3.2.3' },
+  }), [
+    Object.assign(new Error(`Invalid engine "runtime"`), {
+      errors: [
+        // eslint-disable-next-line max-len
+        new Error(`Invalid name "bun" does not match "nondescript" for "runtime"`),
+        // eslint-disable-next-line max-len
+        new Error(`Invalid name "node" does not match "nondescript" for "runtime"`),
+      ],
+      engine: 'runtime',
+      isWarn: false,
+      isError: true,
+      current: { name: 'nondescript', version: '20.0.0' },
+      required: [
+        {
+          name: 'bun',
+          version: '>= 1.0.0',
+          onFail: 'ignore',
+        },
+        {
+          name: 'node',
+          version: '>= 20.0.0',
+          onFail: 'error',
+        },
+      ],
+    }),
+  ])
+})
