@@ -42,6 +42,60 @@ t.test('default options', async t => {
 })
 
 t.test('tests all the right fields', async t => {
+  for (const nonString of [1, true, false, null, undefined, {}, []]) {
+    t.test('invalid name value', async t => {
+      t.throws(
+        () => parseDevEngines({
+          runtime: {
+            name: nonString,
+            version: '14',
+          },
+        }, {
+          runtime: {
+            name: 'nondescript',
+            version: '14',
+          },
+        }),
+        new Error(`Invalid non-string value for "name" within "runtime"`)
+      )
+    })
+    t.test('invalid version value', async t => {
+      t.throws(
+        () => parseDevEngines({
+          runtime: {
+            name: 'nondescript',
+            version: nonString,
+          },
+        }, {
+          runtime: {
+            name: 'nondescript',
+            version: '14',
+          },
+        }),
+        new Error(`Invalid non-string value for "version" within "runtime"`)
+      )
+    })
+    t.test('invalid onFail value', async t => {
+      t.throws(
+        () => parseDevEngines({
+          runtime: {
+            name: 'nondescript',
+            version: '14',
+            onFail: nonString,
+          },
+        }, {
+          runtime: {
+            name: 'nondescript',
+            version: '14',
+          },
+        }),
+        new Error(`Invalid non-string value for "onFail" within "runtime"`)
+      )
+    })
+  }
+})
+
+t.test('tests all the right fields', async t => {
   for (const env of ['packageManager', 'runtime', 'cpu', 'libc', 'os']) {
     t.test(`field - ${env}`, async t => {
       t.test('current name does not match, wanted has extra attribute', async t => {
