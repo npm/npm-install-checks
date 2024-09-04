@@ -1,5 +1,5 @@
 const t = require('tap')
-const { parseDevEngines, checkDevEnginesDep } = require('../lib/dev-engines')
+const { parseDevEngines } = require('../lib/dev-engines')
 const { devEngines } = require('../lib/env')
 
 t.test('noop options', async t => {
@@ -38,22 +38,29 @@ t.test('invalid name', async t => {
   ])
 })
 
-t.test('no arguments', async t => {
-  t.throws(() => checkDevEnginesDep())
-  t.same(parseDevEngines(), [])
-})
-
 t.test('default options', async t => {
   t.same(parseDevEngines({}, devEngines()), [])
 })
 
-t.test('tests non-object engine values', async t => {
+t.test('tests non-object', async t => {
   const core = [1, true, false, null, undefined]
-  for (const nonString of [...core, [[]], ...core.map(v => [v])]) {
+  for (const nonObject of [...core, [[]], ...core.map(v => [v])]) {
+    t.test('invalid devEngines', async t => {
+      t.throws(
+        () => parseDevEngines(nonObject, {
+          runtime: {
+            name: 'nondescript',
+            version: '14',
+          },
+        }),
+        new Error(`Invalid non-object value for devEngines`)
+      )
+    })
+
     t.test('invalid engine property', async t => {
       t.throws(
         () => parseDevEngines({
-          runtime: nonString,
+          runtime: nonObject,
         }, {
           runtime: {
             name: 'nondescript',
@@ -66,7 +73,7 @@ t.test('tests non-object engine values', async t => {
   }
 })
 
-t.test('tests non-string dep values ', async t => {
+t.test('tests non-string ', async t => {
   for (const nonString of [1, true, false, null, undefined, {}, []]) {
     t.test('invalid name value', async t => {
       t.throws(
