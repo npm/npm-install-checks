@@ -2,6 +2,12 @@ const t = require('tap')
 const { parseDevEngines, checkDevEnginesDep } = require('../lib/dev-engines')
 const { devEngines } = require('../lib/env')
 
+t.test('noop options', async t => {
+  t.same(parseDevEngines({
+    runtime: [],
+  }, devEngines()), [])
+})
+
 t.test('unrecognized property', async t => {
   const wanted = { name: `alpha`, version: '1' }
   const current = { name: `alpha` }
@@ -41,7 +47,26 @@ t.test('default options', async t => {
   t.same(parseDevEngines({}, devEngines()), [])
 })
 
-t.test('tests all the right fields', async t => {
+t.test('tests non-object engine values', async t => {
+  const core = [1, true, false, null, undefined]
+  for (const nonString of [...core, [[]], ...core.map(v => [v])]) {
+    t.test('invalid engine property', async t => {
+      t.throws(
+        () => parseDevEngines({
+          runtime: nonString,
+        }, {
+          runtime: {
+            name: 'nondescript',
+            version: '14',
+          },
+        }),
+        new Error(`Invalid non-object value for "runtime"`)
+      )
+    })
+  }
+})
+
+t.test('tests non-string dep values ', async t => {
   for (const nonString of [1, true, false, null, undefined, {}, []]) {
     t.test('invalid name value', async t => {
       t.throws(
