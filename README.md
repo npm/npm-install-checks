@@ -28,3 +28,10 @@ Check if a package's `os`, `cpu` and `libc` match the running system.
 `environment` overrides the execution environment which comes from `process.platform` `process.arch` and current `libc` environment by default. `environment.os` `environment.cpu` and `environment.libc` are available.
 
 Error code: 'EBADPLATFORM'
+
+
+### .checkDevEngines(wanted, current, opts)
+
+Check if a package's `devEngines` property matches the current system environment.
+
+Returns an array of `Error` objects, some of which may be warnings, this can be checked with `.isError` and `.isWarn`. Errors correspond to an error for a given "engine" failure, reasons for each engine "dependency" failure can be found within `.errors`.   
