@@ -1,30 +1,29 @@
 const t = require('tap')
-const { parseDevEngines } = require('../lib/dev-engines')
-const { devEngines } = require('../lib/env')
+const { checkDevEngines, currentEnv } = require('..')
 
 t.test('noop options', async t => {
-  t.same(parseDevEngines({
+  t.same(checkDevEngines({
     runtime: [],
-  }, devEngines()), [])
+  }, currentEnv.devEngines()), [])
 })
 
 t.test('unrecognized property', async t => {
   const wanted = { name: `alpha`, version: '1' }
   const current = { name: `alpha` }
   t.throws(
-    () => parseDevEngines({ unrecognized: wanted }, { os: current }),
+    () => checkDevEngines({ unrecognized: wanted }, { os: current }),
     new Error('Invalid property "unrecognized"')
   )
 })
 
 t.test('empty devEngines', async t => {
-  t.same(parseDevEngines({ }, { os: { name: `darwin` } }), [])
+  t.same(checkDevEngines({ }, { os: { name: `darwin` } }), [])
 })
 
 t.test('invalid name', async t => {
   const wanted = { name: `alpha`, onFail: 'download' }
   const current = { name: `beta` }
-  t.same(parseDevEngines({ os: wanted }, { os: current }), [
+  t.same(checkDevEngines({ os: wanted }, { os: current }), [
     Object.assign(new Error(`Invalid engine "os"`), {
       errors: [
         new Error(`Invalid name "alpha" does not match "beta" for "os"`),
@@ -39,7 +38,7 @@ t.test('invalid name', async t => {
 })
 
 t.test('default options', async t => {
-  t.same(parseDevEngines({}, devEngines()), [])
+  t.same(checkDevEngines({}, currentEnv.devEngines()), [])
 })
 
 t.test('tests non-object', async t => {
@@ -47,7 +46,7 @@ t.test('tests non-object', async t => {
   for (const nonObject of [...core, [[]], ...core.map(v => [v])]) {
     t.test('invalid devEngines', async t => {
       t.throws(
-        () => parseDevEngines(nonObject, {
+        () => checkDevEngines(nonObject, {
           runtime: {
             name: 'nondescript',
             version: '14',
@@ -59,7 +58,7 @@ t.test('tests non-object', async t => {
 
     t.test('invalid engine property', async t => {
       t.throws(
-        () => parseDevEngines({
+        () => checkDevEngines({
           runtime: nonObject,
         }, {
           runtime: {
@@ -77,7 +76,7 @@ t.test('tests non-string ', async t => {
   for (const nonString of [1, true, false, null, undefined, {}, []]) {
     t.test('invalid name value', async t => {
       t.throws(
-        () => parseDevEngines({
+        () => checkDevEngines({
           runtime: {
             name: nonString,
             version: '14',
@@ -93,7 +92,7 @@ t.test('tests non-string ', async t => {
     })
     t.test('invalid version value', async t => {
       t.throws(
-        () => parseDevEngines({
+        () => checkDevEngines({
           runtime: {
             name: 'nondescript',
             version: nonString,
@@ -109,7 +108,7 @@ t.test('tests non-string ', async t => {
     })
     t.test('invalid onFail value', async t => {
       t.throws(
-        () => parseDevEngines({
+        () => checkDevEngines({
           runtime: {
             name: 'nondescript',
             version: '14',
@@ -134,26 +133,26 @@ t.test('tests all the right fields', async t => {
         const wanted = { name: `test-${env}-wanted`, extra: `test-${env}-extra` }
         const current = { name: `test-${env}-current` }
         t.throws(
-          () => parseDevEngines({ [env]: wanted }, { [env]: current }),
+          () => checkDevEngines({ [env]: wanted }, { [env]: current }),
           new Error(`Invalid property "extra" for "${env}"`)
         )
       })
       t.test('current is not given', async t => {
         const wanted = { name: `test-${env}-wanted` }
         t.throws(
-          () => parseDevEngines({ [env]: wanted }),
+          () => checkDevEngines({ [env]: wanted }),
           new Error(`Unable to determine "name" for "${env}"`)
         )
       })
       t.test('name only', async t => {
         const wanted = { name: 'test-name' }
         const current = { name: 'test-name' }
-        t.same(parseDevEngines({ [env]: wanted }, { [env]: current }), [])
+        t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [])
       })
       t.test('non-semver version is not the same', async t => {
         const wanted = { name: `test-name`, version: 'test-version-wanted' }
         const current = { name: `test-name`, version: 'test-version-current' }
-        t.same(parseDevEngines({ [env]: wanted }, { [env]: current }), [
+        t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
           Object.assign(new Error(`Invalid engine "${env}"`), {
             errors: [
               // eslint-disable-next-line max-len
@@ -170,12 +169,12 @@ t.test('tests all the right fields', async t => {
       t.test('non-semver version is the same', async t => {
         const wanted = { name: `test-name`, version: 'test-version' }
         const current = { name: `test-name`, version: 'test-version' }
-        t.same(parseDevEngines({ [env]: wanted }, { [env]: current }), [])
+        t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [])
       })
       t.test('semver version is not in range', async t => {
         const wanted = { name: `test-name`, version: '^1.0.0' }
         const current = { name: `test-name`, version: '2.0.0' }
-        t.same(parseDevEngines({ [env]: wanted }, { [env]: current }), [
+        t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
           Object.assign(new Error(`Invalid engine "${env}"`), {
             errors: [
               // eslint-disable-next-line max-len
@@ -192,7 +191,7 @@ t.test('tests all the right fields', async t => {
       t.test('semver version is in range', async t => {
         const wanted = { name: `test-name`, version: '^1.0.0' }
         const current = { name: `test-name`, version: '1.0.0' }
-        t.same(parseDevEngines({ [env]: wanted }, { [env]: current }), [])
+        t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [])
       })
       t.test('returns the last failure', async t => {
         const wanted = [
@@ -200,7 +199,7 @@ t.test('tests all the right fields', async t => {
           { name: `test-name`, version: 'test-version-two' },
         ]
         const current = { name: `test-name`, version: 'test-version-three' }
-        t.same(parseDevEngines({ [env]: wanted }, { [env]: current }), [
+        t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
           Object.assign(new Error(`Invalid engine "${env}"`), {
             errors: [
               // eslint-disable-next-line max-len
@@ -223,7 +222,7 @@ t.test('tests all the right fields', async t => {
         const wanted = { name: `test-name`, version: '^1.0.0', onFail: 'unrecognized' }
         const current = { name: `test-name`, version: '1.0.0' }
         t.throws(
-          () => parseDevEngines({ [env]: wanted }, { [env]: current }),
+          () => checkDevEngines({ [env]: wanted }, { [env]: current }),
           new Error(`Invalid onFail value "unrecognized" for "${env}"`)
         )
       })
@@ -231,14 +230,14 @@ t.test('tests all the right fields', async t => {
         const wanted = { version: '^1.0.0' }
         const current = { name: `test-name`, version: '1.0.0' }
         t.throws(
-          () => parseDevEngines({ [env]: wanted }, { [env]: current }),
+          () => checkDevEngines({ [env]: wanted }, { [env]: current }),
           new Error(`Missing "name" property for "${env}"`)
         )
       })
       t.test('invalid name', async t => {
         const wanted = { name: `alpha` }
         const current = { name: `beta` }
-        t.same(parseDevEngines({ [env]: wanted }, { [env]: current }), [
+        t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
           Object.assign(new Error(`Invalid engine "${env}"`), {
             errors: [
               new Error(`Invalid name "alpha" does not match "beta" for "${env}"`),
@@ -255,7 +254,7 @@ t.test('tests all the right fields', async t => {
         const wanted = { name: `alpha`, version: '1' }
         const current = { name: `alpha` }
         t.throws(
-          () => parseDevEngines({ [env]: wanted }, { [env]: current }),
+          () => checkDevEngines({ [env]: wanted }, { [env]: current }),
           new Error(`Unable to determine "version" for "${env}" "alpha"`)
         )
       })
@@ -277,7 +276,7 @@ t.test('spec 1', async t => {
     },
   }
 
-  t.same(parseDevEngines(example, {
+  t.same(checkDevEngines(example, {
     os: { name: 'darwin', version: '23.0.0' },
     cpu: { name: 'arm' },
     libc: { name: 'glibc' },
@@ -329,7 +328,7 @@ t.test('spec 2', async t => {
     ],
   }
 
-  t.same(parseDevEngines(example, {
+  t.same(checkDevEngines(example, {
     os: { name: 'darwin', version: '23.0.0' },
     cpu: { name: 'arm' },
     libc: { name: 'glibc' },
@@ -337,7 +336,7 @@ t.test('spec 2', async t => {
     packageManager: { name: 'yarn', version: '3.2.3' },
   }), [])
 
-  t.same(parseDevEngines(example, {
+  t.same(checkDevEngines(example, {
     os: { name: 'darwin', version: '10.0.0' },
     cpu: { name: 'arm' },
     libc: { name: 'glibc' },
@@ -360,7 +359,7 @@ t.test('spec 2', async t => {
     }),
   ])
 
-  t.same(parseDevEngines(example, {
+  t.same(checkDevEngines(example, {
     os: { name: 'darwin', version: '23.0.0' },
     cpu: { name: 'arm' },
     libc: { name: 'glibc' },
