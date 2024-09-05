@@ -392,3 +392,28 @@ t.test('spec 2', async t => {
     }),
   ])
 })
+
+t.test('empty array along side error', async t => {
+  t.same(checkDevEngines({
+    cpu: [],
+    runtime: {
+      name: 'bun',
+      onFail: 'error',
+    },
+  }, {
+    cpu: { name: 'arm' },
+    runtime: { name: 'node', version: '20.0.0' },
+  }), [Object.assign(new Error(`Invalid engine "runtime"`), {
+    errors: [
+      new Error(`Invalid name "bun" does not match "node" for "runtime"`),
+    ],
+    engine: 'runtime',
+    isWarn: false,
+    isError: true,
+    current: { name: 'node', version: '20.0.0' },
+    required: {
+      name: 'bun',
+      onFail: 'error',
+    },
+  })])
+})
