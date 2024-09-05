@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.0.0](https://github.com/npm/npm-install-checks/compare/v6.3.0...v7.0.0) (2024-09-03)
+### ⚠️ BREAKING CHANGES
+* `npm-install-checks` now supports node `^18.17.0 || >=20.5.0`
+### Bug Fixes
+* [`0ac00b5`](https://github.com/npm/npm-install-checks/commit/0ac00b53862de606e7163d8ca2b8d4dda8476a89) [#114](https://github.com/npm/npm-install-checks/pull/114) align to npm 10 node engine range (@hashtagchris)
+### Chores
+* [`771bc19`](https://github.com/npm/npm-install-checks/commit/771bc19142bc83639810a157e9dfe9ca83caab77) [#114](https://github.com/npm/npm-install-checks/pull/114) run template-oss-apply (@hashtagchris)
+* [`d7cf1dc`](https://github.com/npm/npm-install-checks/commit/d7cf1dcf963aec10a75a8af31894038bd8afba24) [#112](https://github.com/npm/npm-install-checks/pull/112) bump @npmcli/eslint-config from 4.0.5 to 5.0.0 (@dependabot[bot])
+* [`98057a0`](https://github.com/npm/npm-install-checks/commit/98057a03bbb985741a512e9161690ea22a1c62e5) [#98](https://github.com/npm/npm-install-checks/pull/98) linting: no-unused-vars (@lukekarrys)
+* [`f1670ca`](https://github.com/npm/npm-install-checks/commit/f1670ca26af7823224c8bed36eb321a98206a5d5) [#98](https://github.com/npm/npm-install-checks/pull/98) bump @npmcli/template-oss to 4.22.0 (@lukekarrys)
+* [`06fdf5e`](https://github.com/npm/npm-install-checks/commit/06fdf5e89cfabe38af510bb6f929f1756826e706) [#113](https://github.com/npm/npm-install-checks/pull/113) postinstall for dependabot template-oss PR (@hashtagchris)
+* [`8b7cd81`](https://github.com/npm/npm-install-checks/commit/8b7cd81b9ad0168a81d294aad501e5c203626782) [#113](https://github.com/npm/npm-install-checks/pull/113) bump @npmcli/template-oss from 4.23.1 to 4.23.3 (@dependabot[bot])
+
 ## [6.3.0](https://github.com/npm/npm-install-checks/compare/v6.2.0...v6.3.0) (2023-10-06)
 
 ### Features
