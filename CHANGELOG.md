@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.1.0](https://github.com/npm/npm-install-checks/compare/v7.0.0...v7.1.0) (2024-09-11)
+### Features
+* [`ebf9b9f`](https://github.com/npm/npm-install-checks/commit/ebf9b9f4c08035d8e2c41cd9bc3302cd8bdc9184) [#116](https://github.com/npm/npm-install-checks/pull/116) adds checkDevEngines (#116) (@reggi)
+### Bug Fixes
+* [`ec4066b`](https://github.com/npm/npm-install-checks/commit/ec4066b768075cc84270d9ee7c0a76b011f1555a) [#118](https://github.com/npm/npm-install-checks/pull/118) skip network requests in report.getReport() (#118) (@wraithgar)
+
 ## [7.0.0](https://github.com/npm/npm-install-checks/compare/v6.3.0...v7.0.0) (2024-09-03)
 ### ⚠️ BREAKING CHANGES
 * `npm-install-checks` now supports node `^18.17.0 || >=20.5.0`
