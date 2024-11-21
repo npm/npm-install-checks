@@ -98,27 +98,44 @@ t.test('libc', (t) => {
   let PLATFORM = 'linux'
   let REPORT = {}
   let readFileSync
+  let noCache = true
+
+  function withCache (cb) {
+    noCache = false
+    cb()
+    noCache = true
+    withoutLibcCache()
+  }
 
   function withoutLibcCache () {
     readFileSync = () => {
       throw new Error('File not found')
     }
-    noCacheChckPtfm = (...args) => {
-      const original = t.mock('..', {
-        '../lib/current-env': t.mock('../lib/current-env', {
-          'node:fs': {
-            readFileSync,
+    const original = t.mock('..', {
+      '../lib/current-env': t.mock('../lib/current-env', {
+        'node:fs': {
+          readFileSync: () => {
+            return readFileSync()
           },
-          'node:process': {
-            platform: PLATFORM,
-            report: {
-              getReport: () => REPORT,
-            },
+        },
+        'node:process': Object.defineProperty({
+          report: {
+            getReport: () => REPORT,
           },
+        }, 'platform', {
+          enumerable: true,
+          get: () => PLATFORM,
         }),
-      }).checkPlatform
-      withoutLibcCache()
-      return original(...args)
+      }),
+    }).checkPlatform
+    noCacheChckPtfm = (...args) => {
+      try {
+        original(...args)
+      } finally {
+        if (noCache) {
+          withoutLibcCache()
+        }
+      }
     }
   }
 
@@ -137,8 +154,16 @@ t.test('libc', (t) => {
   t.test('glibc', (t) => {
     PLATFORM = 'linux'
 
-    readFileSync = () => 'this ldd file contains GNU C Library'
-    t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc on glibc from ldd file')
+    withCache(() => {
+      readFileSync = () => 'this ldd file contains GNU C Library'
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }),
+        'allows glibc on glibc from ldd file')
+
+      readFileSync = () => {
+        throw new Error('File not found')
+      }
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc from ldd file cache')
+    })
 
     REPORT = {}
     t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
@@ -148,8 +173,13 @@ t.test('libc', (t) => {
     t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
       'fails when header is missing glibcVersionRuntime property')
 
-    REPORT = { header: { glibcVersionRuntime: '1' } }
-    t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc on glibc')
+    withCache(() => {
+      REPORT = { header: { glibcVersionRuntime: '1' } }
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc on glibc')
+
+      REPORT = {}
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc from report cache')
+    })
 
     readFileSync = () => 'this ldd file is unsupported'
     t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
