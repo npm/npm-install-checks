@@ -94,30 +94,59 @@ t.test('wrong libc with overridden libc', async t =>
   }), { code: 'EBADPLATFORM' }))
 
 t.test('libc', (t) => {
-  let PLATFORM = ''
-
-  const _processPlatform = Object.getOwnPropertyDescriptor(process, 'platform')
-  Object.defineProperty(process, 'platform', {
-    enumerable: true,
-    configurable: true,
-    get: () => PLATFORM,
-  })
-
+  let noCacheChckPtfm
+  let PLATFORM = 'linux'
   let REPORT = {}
-  const _processReport = process.report.getReport
-  process.report.getReport = () => REPORT
+  let readFileSync
+  let noCache = true
 
-  t.teardown(() => {
-    Object.defineProperty(process, 'platform', _processPlatform)
-    process.report.getReport = _processReport
-  })
+  function withCache (cb) {
+    noCache = false
+    cb()
+    noCache = true
+    withoutLibcCache()
+  }
+
+  function withoutLibcCache () {
+    readFileSync = () => {
+      throw new Error('File not found')
+    }
+    const original = t.mock('..', {
+      '../lib/current-env': t.mock('../lib/current-env', {
+        'node:fs': {
+          readFileSync: () => {
+            return readFileSync()
+          },
+        },
+        'node:process': Object.defineProperty({
+          report: {
+            getReport: () => REPORT,
+          },
+        }, 'platform', {
+          enumerable: true,
+          get: () => PLATFORM,
+        }),
+      }),
+    }).checkPlatform
+    noCacheChckPtfm = (...args) => {
+      try {
+        original(...args)
+      } finally {
+        if (noCache) {
+          withoutLibcCache()
+        }
+      }
+    }
+  }
+
+  withoutLibcCache()
 
   t.test('fails when not in linux', (t) => {
     PLATFORM = 'darwin'
 
-    t.throws(() => checkPlatform({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
       'fails for glibc when not in linux')
-    t.throws(() => checkPlatform({ libc: 'musl' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'musl' }), { code: 'EBADPLATFORM' },
       'fails for musl when not in linux')
     t.end()
   })
@@ -125,17 +154,38 @@ t.test('libc', (t) => {
   t.test('glibc', (t) => {
     PLATFORM = 'linux'
 
+    withCache(() => {
+      readFileSync = () => 'this ldd file contains GNU C Library'
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }),
+        'allows glibc on glibc from ldd file')
+
+      readFileSync = () => {
+        throw new Error('File not found')
+      }
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc from ldd file cache')
+    })
+
     REPORT = {}
-    t.throws(() => checkPlatform({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
       'fails when report is missing header property')
 
     REPORT = { header: {} }
-    t.throws(() => checkPlatform({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
       'fails when header is missing glibcVersionRuntime property')
 
-    REPORT = { header: { glibcVersionRuntime: '1' } }
-    t.doesNotThrow(() => checkPlatform({ libc: 'glibc' }), 'allows glibc on glibc')
-    t.throws(() => checkPlatform({ libc: 'musl' }), { code: 'EBADPLATFORM' },
+    withCache(() => {
+      REPORT = { header: { glibcVersionRuntime: '1' } }
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc on glibc')
+
+      REPORT = {}
+      t.doesNotThrow(() => noCacheChckPtfm({ libc: 'glibc' }), 'allows glibc from report cache')
+    })
+
+    readFileSync = () => 'this ldd file is unsupported'
+    t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
+      'fails when ldd file exists but is not something known')
+
+    t.throws(() => noCacheChckPtfm({ libc: 'musl' }), { code: 'EBADPLATFORM' },
       'does not allow musl on glibc')
 
     t.end()
@@ -144,25 +194,28 @@ t.test('libc', (t) => {
   t.test('musl', (t) => {
     PLATFORM = 'linux'
 
+    readFileSync = () => 'this ldd file contains musl'
+    t.doesNotThrow(() => noCacheChckPtfm({ libc: 'musl' }), 'allows musl on musl from ldd file')
+
     REPORT = {}
-    t.throws(() => checkPlatform({ libc: 'musl' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'musl' }), { code: 'EBADPLATFORM' },
       'fails when report is missing sharedObjects property')
 
     REPORT = { sharedObjects: {} }
-    t.throws(() => checkPlatform({ libc: 'musl' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'musl' }), { code: 'EBADPLATFORM' },
       'fails when sharedObjects property is not an array')
 
     REPORT = { sharedObjects: [] }
-    t.throws(() => checkPlatform({ libc: 'musl' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'musl' }), { code: 'EBADPLATFORM' },
       'fails when sharedObjects does not contain musl')
 
     REPORT = { sharedObjects: ['ld-musl-foo'] }
-    t.doesNotThrow(() => checkPlatform({ libc: 'musl' }), 'allows musl on musl as ld-musl-')
+    t.doesNotThrow(() => noCacheChckPtfm({ libc: 'musl' }), 'allows musl on musl as ld-musl-')
 
     REPORT = { sharedObjects: ['libc.musl-'] }
-    t.doesNotThrow(() => checkPlatform({ libc: 'musl' }), 'allows musl on musl as libc.musl-')
+    t.doesNotThrow(() => noCacheChckPtfm({ libc: 'musl' }), 'allows musl on musl as libc.musl-')
 
-    t.throws(() => checkPlatform({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
+    t.throws(() => noCacheChckPtfm({ libc: 'glibc' }), { code: 'EBADPLATFORM' },
       'does not allow glibc on musl')
 
     t.end()
