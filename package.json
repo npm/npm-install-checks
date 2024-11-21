@@ -1,6 +1,6 @@
 {
   "name": "npm-install-checks",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "description": "Check the engines and platform fields in package.json",
   "main": "lib/index.js",
   "dependencies": {

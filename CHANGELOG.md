@@ -1,5 +1,11 @@
 # Changelog
 
+## [7.1.1](https://github.com/npm/npm-install-checks/compare/v7.1.0...v7.1.1) (2024-11-21)
+### Bug Fixes
+* [`acf64a7`](https://github.com/npm/npm-install-checks/commit/acf64a7cffae5bd568f63f4c1b24f7852b62c26e) [#120](https://github.com/npm/npm-install-checks/pull/120) cache local environment values (#120) (@Tofandel)
+### Chores
+* [`fca8f29`](https://github.com/npm/npm-install-checks/commit/fca8f29147879b37fa35f6468fecec25e693428b) [#119](https://github.com/npm/npm-install-checks/pull/119) bump @npmcli/template-oss from 4.23.3 to 4.23.4 (#119) (@dependabot[bot], @npm-cli-bot)
+
 ## [7.1.0](https://github.com/npm/npm-install-checks/compare/v7.0.0...v7.1.0) (2024-09-11)
 ### Features
 * [`ebf9b9f`](https://github.com/npm/npm-install-checks/commit/ebf9b9f4c08035d8e2c41cd9bc3302cd8bdc9184) [#116](https://github.com/npm/npm-install-checks/pull/116) adds checkDevEngines (#116) (@reggi)
