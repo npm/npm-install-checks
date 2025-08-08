@@ -12,7 +12,7 @@ t.test('unrecognized property', async t => {
   const current = { name: `alpha` }
   t.throws(
     () => checkDevEngines({ unrecognized: wanted }, { os: current }),
-    new Error('Invalid property "unrecognized"')
+    new Error('Invalid property "devEngines.unrecognized"')
   )
 })
 
@@ -24,7 +24,7 @@ t.test('invalid name', async t => {
   const wanted = { name: `alpha`, onFail: 'download' }
   const current = { name: `beta` }
   t.same(checkDevEngines({ os: wanted }, { os: current }), [
-    Object.assign(new Error(`Invalid engine "os"`), {
+    Object.assign(new Error(`Invalid devEngines.os`), {
       errors: [
         new Error(`Invalid name "alpha" does not match "beta" for "os"`),
       ],
@@ -52,7 +52,7 @@ t.test('tests non-object', async t => {
             version: '14',
           },
         }),
-        new Error(`Invalid non-object value for devEngines`)
+        new Error(`Invalid non-object value for "devEngines"`)
       )
     })
 
@@ -153,7 +153,7 @@ t.test('tests all the right fields', async t => {
         const wanted = { name: `test-name`, version: 'test-version-wanted' }
         const current = { name: `test-name`, version: 'test-version-current' }
         t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
-          Object.assign(new Error(`Invalid engine "${env}"`), {
+          Object.assign(new Error(`Invalid devEngines.${env}`), {
             errors: [
               // eslint-disable-next-line max-len
               new Error(`Invalid version "test-version-wanted" does not match "test-version-current" for "${env}"`),
@@ -175,7 +175,7 @@ t.test('tests all the right fields', async t => {
         const wanted = { name: `test-name`, version: '^1.0.0' }
         const current = { name: `test-name`, version: '2.0.0' }
         t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
-          Object.assign(new Error(`Invalid engine "${env}"`), {
+          Object.assign(new Error(`Invalid devEngines.${env}`), {
             errors: [
               // eslint-disable-next-line max-len
               new Error(`Invalid semver version "^1.0.0" does not match "2.0.0" for "${env}"`),
@@ -200,7 +200,7 @@ t.test('tests all the right fields', async t => {
         ]
         const current = { name: `test-name`, version: 'test-version-three' }
         t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
-          Object.assign(new Error(`Invalid engine "${env}"`), {
+          Object.assign(new Error(`Invalid devEngines.${env}`), {
             errors: [
               // eslint-disable-next-line max-len
               new Error(`Invalid version "test-version-one" does not match "test-version-three" for "${env}"`),
@@ -238,7 +238,7 @@ t.test('tests all the right fields', async t => {
         const wanted = { name: `alpha` }
         const current = { name: `beta` }
         t.same(checkDevEngines({ [env]: wanted }, { [env]: current }), [
-          Object.assign(new Error(`Invalid engine "${env}"`), {
+          Object.assign(new Error(`Invalid devEngines.${env}`), {
             errors: [
               new Error(`Invalid name "alpha" does not match "beta" for "${env}"`),
             ],
@@ -343,7 +343,7 @@ t.test('spec 2', async t => {
     runtime: { name: 'node', version: '20.0.0' },
     packageManager: { name: 'yarn', version: '3.2.3' },
   }), [
-    Object.assign(new Error(`Invalid engine "os"`), {
+    Object.assign(new Error(`Invalid devEngines.os`), {
       errors: [
         // eslint-disable-next-line max-len
         new Error(`Invalid semver version ">= 23.0.0" does not match "10.0.0" for "os"`),
@@ -366,7 +366,7 @@ t.test('spec 2', async t => {
     runtime: { name: 'nondescript', version: '20.0.0' },
     packageManager: { name: 'yarn', version: '3.2.3' },
   }), [
-    Object.assign(new Error(`Invalid engine "runtime"`), {
+    Object.assign(new Error(`Invalid devEngines.runtime`), {
       errors: [
         // eslint-disable-next-line max-len
         new Error(`Invalid name "bun" does not match "nondescript" for "runtime"`),
@@ -403,7 +403,7 @@ t.test('empty array along side error', async t => {
   }, {
     cpu: { name: 'arm' },
     runtime: { name: 'node', version: '20.0.0' },
-  }), [Object.assign(new Error(`Invalid engine "runtime"`), {
+  }), [Object.assign(new Error(`Invalid devEngines.runtime`), {
     errors: [
       new Error(`Invalid name "bun" does not match "node" for "runtime"`),
     ],
