@@ -1,5 +1,14 @@
 # Changelog
 
+## [8.0.0](https://github.com/npm/npm-install-checks/compare/v7.1.2...v8.0.0) (2025-10-22)
+### ⚠️ BREAKING CHANGES
+* `npm-install-checks` now supports node `^20.17.0 || >=22.9.0`
+### Bug Fixes
+* [`686f0f0`](https://github.com/npm/npm-install-checks/commit/686f0f08c57b4ba63e257e86546f55d722e97f40) [#134](https://github.com/npm/npm-install-checks/pull/134) align to npm 11 node engine range (@owlstronaut)
+### Chores
+* [`3103755`](https://github.com/npm/npm-install-checks/commit/310375537dcd99de75c3fddff999fc20200929e4) [#134](https://github.com/npm/npm-install-checks/pull/134) template-oss-apply (@owlstronaut)
+* [`30aa097`](https://github.com/npm/npm-install-checks/commit/30aa097ae907a1a623495c084d217090df0016ce) [#132](https://github.com/npm/npm-install-checks/pull/132) bump @npmcli/template-oss from 4.26.0 to 4.27.1 (#132) (@dependabot[bot], @npm-cli-bot)
+
 ## [7.1.2](https://github.com/npm/npm-install-checks/compare/v7.1.1...v7.1.2) (2025-08-25)
 ### Bug Fixes
 * [`8ece856`](https://github.com/npm/npm-install-checks/commit/8ece8564cf9ca8717017e1a9d0aef01e4664311e) [#128](https://github.com/npm/npm-install-checks/pull/128) update error message for checkDevEngines (#128) (@meowtec)
