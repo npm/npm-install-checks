@@ -1,5 +1,18 @@
 # Changelog
 
+## [9.0.0](https://github.com/npm/npm-install-checks/compare/v8.0.0...v9.0.0) (2026-05-15)
+### ⚠️ BREAKING CHANGES
+* `npm-install-checks` now supports node `^22.22.2 || ^24.15.0 || >=26.0.0`
+* template-oss-apply
+### Features
+* [`e2c048e`](https://github.com/npm/npm-install-checks/commit/e2c048edddd6d5d0e5982dc8bed909a000e28de0) [#143](https://github.com/npm/npm-install-checks/pull/143) bump to new node engine range (@owlstronaut)
+* [`1e8e4d5`](https://github.com/npm/npm-install-checks/commit/1e8e4d5727046d591bacda575867ad33424c3adb) [#143](https://github.com/npm/npm-install-checks/pull/143) template-oss-apply (@owlstronaut)
+### Chores
+* [`be1d65e`](https://github.com/npm/npm-install-checks/commit/be1d65e068f04c03853f1bd905fb5bf865b9d266) [#143](https://github.com/npm/npm-install-checks/pull/143) template-oss-apply (@owlstronaut)
+* [`cda64b6`](https://github.com/npm/npm-install-checks/commit/cda64b69944ac72fa5fe9f02a811f2c872e95114) [#143](https://github.com/npm/npm-install-checks/pull/143) bumping @npmcli/template-oss from 4.30.0 to 5.1.0 (@owlstronaut)
+* [`73448d5`](https://github.com/npm/npm-install-checks/commit/73448d5da4211b9e9a2aa1b069357497f0644ca6) [#136](https://github.com/npm/npm-install-checks/pull/136) bump @npmcli/eslint-config from 5.1.0 to 6.0.0 (#136) (@dependabot[bot])
+* [`6b3dd14`](https://github.com/npm/npm-install-checks/commit/6b3dd1447310fff321434ec617d6d5b2bd238395) [#140](https://github.com/npm/npm-install-checks/pull/140) bump @npmcli/template-oss from 4.29.0 to 4.30.0 (#140) (@dependabot[bot], @npm-cli-bot)
+
 ## [8.0.0](https://github.com/npm/npm-install-checks/compare/v7.1.2...v8.0.0) (2025-10-22)
 ### ⚠️ BREAKING CHANGES
 * `npm-install-checks` now supports node `^20.17.0 || >=22.9.0`
